@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api";
 import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -14,7 +14,7 @@ export default function MyCart() {
   const fetchCart = async () => {
     if (!token) return;
     try {
-      const res = await axios.get("http://localhost:5000/api/cart", {
+      const res = await api.get("/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(res.data);
@@ -26,7 +26,7 @@ export default function MyCart() {
   const removeItem = async (productId) => {
     if (!token) return;
     try {
-      await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
+      await api.delete(`/cart/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCart();
@@ -38,8 +38,8 @@ export default function MyCart() {
   const updateQuantity = async (productId, newQty) => {
     if (!token || newQty < 1) return;
     try {
-      await axios.put(
-        `http://localhost:5000/api/cart/${productId}`,
+      await api.put(
+        `/cart/${productId}`,
         { qty: newQty },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -58,8 +58,8 @@ export default function MyCart() {
         qty: item.qty,
       }));
 
-      await axios.post(
-        "http://localhost:5000/api/orders/place",
+      await api.post(
+        "/orders/place",
         { items, customer },
         { headers: { Authorization: `Bearer ${token}` } }
       );

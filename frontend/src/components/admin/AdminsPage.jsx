@@ -1,6 +1,7 @@
 // src/components/admin/AdminsPage.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
+import api from "../api";
 
 export default function AdminsPage() {
   const [admins, setAdmins] = useState([]);
@@ -13,7 +14,7 @@ export default function AdminsPage() {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admins", {
+        const res = await api.get("/admins", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAdmins(res.data);
@@ -34,7 +35,7 @@ export default function AdminsPage() {
     if (!window.confirm("Are you sure you want to remove this admin?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/admins/${adminId}`, {
+      await api.delete(`/admins/${adminId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api";
 import EnquiryForm from "./EnquiryForm";
 import LoginModal from "./LoginModal";
 import { Link } from "react-router-dom";
@@ -23,7 +23,7 @@ const CarMods = () => {
   // Fetch products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products?type=car");
+      const res = await api.get("/products?type=car");
       setProducts(res.data);
       setFilteredProducts(res.data);
     } catch (err) {

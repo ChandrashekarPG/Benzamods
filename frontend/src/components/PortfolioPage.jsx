@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api";
 import { Helmet } from "react-helmet"; 
 
 export default function PortfolioPage() {
@@ -10,7 +10,7 @@ export default function PortfolioPage() {
   }, []);
 
   const fetchProjects = async () => {
-    const res = await axios.get("http://localhost:5000/api/portfolios");
+    const res = await api.get("/portfolios");
     setProjects(res.data);
   };
 

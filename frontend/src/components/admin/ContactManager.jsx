@@ -1,6 +1,6 @@
 // src/components/admin/ContactManager.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function ContactManager() {
   const [contacts, setContacts] = useState([]);
@@ -12,7 +12,7 @@ export default function ContactManager() {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/contacts");
+      const res = await api.get("/contacts");
       setContacts(res.data);
     } catch (err) {
       console.error(err);
@@ -22,7 +22,7 @@ export default function ContactManager() {
   const deleteContact = async (id) => {
     if (!window.confirm("Delete this contact message?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+      await api.delete(`/contacts/${id}`);
       fetchContacts();
     } catch (err) {
       console.error(err);

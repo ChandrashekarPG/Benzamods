@@ -1,6 +1,6 @@
 // src/components/admin/OrdersPage.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -12,7 +12,7 @@ export default function OrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/orders", {
+        const res = await api.get("/orders", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(res.data);
@@ -29,7 +29,7 @@ export default function OrdersPage() {
     if (!window.confirm("Are you sure you want to remove this order?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`, {
+      await api.delete(`/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders((prev) => prev.filter((order) => order._id !== orderId));

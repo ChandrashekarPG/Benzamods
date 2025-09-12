@@ -32,8 +32,7 @@ import EnquiryForm from "./components/EnquiryForm";
 
 
 
-// API helper
-import api from "./components/api"; // or wherever api.js is located
+
 
 // -------------------- HomePage Component --------------------
 const HomePage = () => {

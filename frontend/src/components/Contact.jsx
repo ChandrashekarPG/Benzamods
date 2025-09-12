@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "./api";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { motion } from "framer-motion";
 import "leaflet/dist/leaflet.css";
@@ -14,7 +14,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/contact", form);
+      const res = await api.post("/contact", form);
       setSuccess(res.data.message);
       setForm({ name: "", email: "", phone: "", message: "" });
     } catch (err) {

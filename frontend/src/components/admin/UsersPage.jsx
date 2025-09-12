@@ -1,6 +1,6 @@
 // src/components/admin/UsersPage.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -12,7 +12,7 @@ export default function UsersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users", {
+        const res = await api.get("/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(res.data);
@@ -29,7 +29,7 @@ export default function UsersPage() {
     if (!window.confirm("Are you sure you want to remove this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+      await api.delete(`/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers((prev) => prev.filter((user) => user._id !== userId));

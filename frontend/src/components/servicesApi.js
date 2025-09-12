@@ -1,11 +1,9 @@
-// src/api/servicesApi.js
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// src/components/servicesApi.js
+import api from "./api"; // same folder as api.js
 
 export const fetchServices = async () => {
   try {
-    const res = await axios.get(`${API_URL}/api/services`);
+    const res = await api.get("/services"); // api.js already handles baseURL
     return res.data;
   } catch (err) {
     console.error("Failed to fetch services:", err);

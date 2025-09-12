@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+
+import api from "../api";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -9,7 +10,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/products", product);
+      await api.post("/products", product);
       alert("Product added!");
       setProduct({ name: "", category: "", type: "car", description: "", price: "", images: [] });
     } catch (err) {

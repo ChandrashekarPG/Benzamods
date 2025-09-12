@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function PortfolioAdmin() {
   const [projects, setProjects] = useState([]);
@@ -11,7 +11,7 @@ export default function PortfolioAdmin() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/portfolios");
+      const res = await api.get("/portfolios");
       setProjects(res.data);
     } catch (err) {
       console.error("Error fetching projects", err);
@@ -20,7 +20,7 @@ export default function PortfolioAdmin() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/portfolios/${id}`);
+      await api.delete(`/portfolios/${id}`);
       fetchProjects();
     } catch (err) {
       console.error("Error deleting project", err);

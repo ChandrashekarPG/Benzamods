@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 
 export default function PortfolioGrid() {
   const [projects, setProjects] = useState([]);
@@ -23,7 +23,7 @@ export default function PortfolioGrid() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/portfolios");
+      const res = await api.get("/portfolios");
       let data = res.data;
 
       if (search.trim()) {
@@ -46,7 +46,7 @@ export default function PortfolioGrid() {
         afterImages: form.afterImages.split(",").map((url) => url.trim()),
       };
 
-      await axios.post("http://localhost:5000/api/portfolios", payload);
+      await api.post("/portfolios", payload);
 
       setForm({
         title: "",

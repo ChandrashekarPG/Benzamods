@@ -6,7 +6,7 @@ import NavbarMobileMenu from "./NavbarMobileMenu";
 import HamburgerButton from "./HamburgerButton";
 import LoginModal from "./LoginModal";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import api from "./api";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function Navbar() {
   const fetchCartCount = async () => {
     if (!user || !token) return setCartCount(0);
     try {
-      const res = await axios.get("http://localhost:5000/api/cart", {
+      const res = await api.get("/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartCount(res.data.length);

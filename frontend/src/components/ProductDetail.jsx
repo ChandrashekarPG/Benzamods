@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -14,7 +14,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const res = await api.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.error("Error fetching product:", err.response?.data || err.message);
@@ -25,8 +25,8 @@ const ProductDetail = () => {
 
   const addToCart = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/cart",
+      const res = await api.post(
+        "/cart",
         { productId: product._id, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );

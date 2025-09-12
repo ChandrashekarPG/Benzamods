@@ -1,6 +1,6 @@
 // src/components/admin/InventoryManager.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function InventoryManager() {
   const [items, setItems] = useState([]);
@@ -19,7 +19,7 @@ export default function InventoryManager() {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/inventory");
+      const res = await api.get("/inventory");
       setItems(res.data);
     } catch (err) {
       console.error(err);
@@ -29,7 +29,7 @@ export default function InventoryManager() {
   const addItem = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/inventory", form);
+      await api.post("/inventory", form);
       setForm({ name: "", category: "", description: "", price: "", image: "" });
       fetchItems();
     } catch (err) {
@@ -41,7 +41,7 @@ export default function InventoryManager() {
     const newName = prompt("Enter new name:", items.find(i => i._id === id).name);
     if (!newName) return;
     try {
-      await axios.put(`http://localhost:5000/api/inventory/${id}`, { name: newName });
+      await api.put(`/inventory/${id}`, { name: newName });
       fetchItems();
     } catch (err) {
       console.error(err);
@@ -51,7 +51,7 @@ export default function InventoryManager() {
   const deleteItem = async (id) => {
     if (!window.confirm("Delete this item?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await api.delete(`/inventory/${id}`);
       fetchItems();
     } catch (err) {
       console.error(err);

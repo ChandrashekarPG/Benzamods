@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import axios from "axios";
+import api from "./api";
 import ClientReview from "./ClientReview";
 
 export default function ClientCarousel() {
@@ -11,7 +11,7 @@ export default function ClientCarousel() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/portfolios");
+        const res = await api.get("/portfolios");
         const clientReviews = res.data
           .filter((p) => p.clientReview)
           .map((p) => ({

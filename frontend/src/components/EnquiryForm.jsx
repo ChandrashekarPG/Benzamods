@@ -1,6 +1,6 @@
 // src/components/EnquiryForm.jsx
 import React, { useState } from "react";
-import axios from "axios";
+import api from "./api";
 
 export default function EnquiryForm({ productId, user, onRequireLogin }) {
   const [form, setForm] = useState({
@@ -24,8 +24,8 @@ export default function EnquiryForm({ productId, user, onRequireLogin }) {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5000/api/enquiries",
+      await api.post(
+        "/enquiries",
         { ...form, productId, userId: user._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );

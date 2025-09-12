@@ -1,6 +1,6 @@
 // src/components/admin/ServiceManager.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api";
 
 export default function ServiceManager() {
   const [services, setServices] = useState([]);
@@ -19,7 +19,7 @@ export default function ServiceManager() {
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/services");
+      const res = await api.get("/services");
       setServices(res.data);
     } catch (err) {
       console.error(err);
@@ -29,7 +29,7 @@ export default function ServiceManager() {
   const addService = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/services", form);
+      await api.post("/services", form);
       setForm({ name: "", serviceType: "", description: "", price: "", image: "" });
       fetchServices();
     } catch (err) {
@@ -41,7 +41,7 @@ export default function ServiceManager() {
     const newName = prompt("Enter new service name:", services.find(s => s._id === id).name);
     if (!newName) return;
     try {
-      await axios.put(`http://localhost:5000/api/services/${id}`, { name: newName });
+      await api.put(`/services/${id}`, { name: newName });
       fetchServices();
     } catch (err) {
       console.error(err);
@@ -51,7 +51,7 @@ export default function ServiceManager() {
   const deleteService = async (id) => {
     if (!window.confirm("Delete this service?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/services/${id}`);
+      await api.delete(`/services/${id}`);
       fetchServices();
     } catch (err) {
       console.error(err);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 
 export default function PortfolioDetail() {
   const { id } = useParams();
@@ -12,7 +12,7 @@ export default function PortfolioDetail() {
 
   const fetchProject = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/portfolios/${id}`);
+      const res = await api.get(`/portfolios/${id}`);
       setProject(res.data);
     } catch (err) {
       console.error(err);
