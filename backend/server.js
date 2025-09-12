@@ -48,7 +48,7 @@ app.use("/api/portfolios", portfolioRoutes);
 app.use("/api/services", servicesRoutes);
 
 // ✅ User & Admin authentication
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
 // ✅ Product Management (Admin adds products, users browse them)
 app.use("/api/products", productRoutes);
