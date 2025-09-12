@@ -1,14 +1,16 @@
+// backend/config/db.js
 const mongoose = require("mongoose");
 
-const connectDB = async () => {
+const connectDB = async (mongoUri) => {
+  const MONGO_URI = mongoUri || process.env.MONGO_URI;
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/benzamods", {
+    const conn = await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("✅ MongoDB Connected");
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
-    console.error("❌ DB Connection Failed", err.message);
+    console.error("❌ DB Connection Failed:", err.message);
     process.exit(1);
   }
 };

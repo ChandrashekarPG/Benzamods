@@ -13,18 +13,27 @@ const servicesRoutes = require("./routes/servicesRoutes");
 
 // ✅ Newly added routes for Auth, Products, Cart, Orders
 const authRoutes = require("./routes/authRoutes");  // User + Admin login/signup
-const productRoutes = require("./routes/productRoutes"); 
-const cartRoutes = require("./routes/cartRoutes"); 
-const orderRoutes = require("./routes/orderRoutes"); 
+const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const enquiryRoutes = require("./routes/enquiryRoutes");
+
+// allow frontend on Vercel + localhost
+const allowedOrigins = [
+  process.env.FRONTEND_URL,   // set this in Render, e.g. https://your-frontend.vercel.app
+  "http://localhost:3000"
+].filter(Boolean);
 
 // Initialize Express
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -54,11 +63,13 @@ app.use("/api/users", userRoutes);
 app.use("/api/admins", adminRoutes);
 app.use("/api/enquiries", enquiryRoutes);
 
-
 // Root route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+// health check for Render
+app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // Start server
 const PORT = process.env.PORT || 5000;
