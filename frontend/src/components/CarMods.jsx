@@ -77,9 +77,9 @@ const CarMods = () => {
         <meta property="og:site_name" content="BenzaMods" />
       </Helmet>
 
-      <h1 className="pt-24 text-4xl font-extrabold text-center mb-10 text-blue-400 tracking-wide">
+      <h2 className="pt-24 text-4xl font-extrabold text-center mb-10 text-yellow-400 tracking-wide">
   🚗 Car Modification Products
-</h1>
+</h2>
 
 
       {/* Filters */}

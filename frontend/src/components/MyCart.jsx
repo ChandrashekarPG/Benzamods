@@ -93,9 +93,12 @@ export default function MyCart() {
     setTimeout(() => setToast(""), 4000); // Hide after 4 seconds
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 relative">
-      <h1 className="text-3xl font-bold mb-6 text-yellow-400">My Cart</h1>
+return (
+  <div className="min-h-screen bg-gray-900 text-white p-6 pt-28 relative">
+    <h1 className="text-3xl font-bold mb-6 text-yellow-400 text-center drop-shadow-lg">
+      🛒 My Cart
+    </h1>
+
 
       {cartItems.length === 0 ? (
         <p className="text-gray-400 mt-6 text-center text-lg">Your cart is empty.</p>

@@ -71,9 +71,9 @@ const BikeMods = () => {
         <meta property="og:site_name" content="BenzaMods" />
       </Helmet>
 
-      <h1 className="pt-24 text-4xl font-extrabold text-center mb-10 text-blue-400 tracking-wide">
-        🚴 Bike Modification Products
-      </h1>
+      <h2 className="pt-24 text-4xl font-extrabold text-center mb-10 text-yellow-400 tracking-wide">
+        🏍️ Bike Modification Products
+      </h2>
 
       {/* Filters */}
       <div className="mb-10 p-5 border border-gray-700 rounded-xl bg-gray-800/60 backdrop-blur-md flex flex-wrap gap-4 items-end shadow-lg">

@@ -67,7 +67,7 @@ export default function PortfolioGrid() {
 
   return (
     <div className="p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen text-white">
-      <h2 className="text-4xl font-extrabold mb-6 text-center text-yellow-400 tracking-wide">
+      <h2 className="pt-24 text-4xl font-extrabold text-center mb-10 text-yellow-400 tracking-wide">
         🚘 Our Portfolio
       </h2>
 
