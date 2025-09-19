@@ -1,4 +1,3 @@
-// src/components/LoginModal.jsx
 import React, { useState } from "react";
 import api from "./api";
 
@@ -14,48 +13,29 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let endpoint;
-      let body;
+      const endpoint = isSignup ? "/auth/signup" : "/auth/login";
 
-      if (role === "admin") {
-        // ✅ Admin login only
-        endpoint = "/adminAuth/login";
-        body = { username: form.email, password: form.password };
-      } else {
-        // ✅ User login/signup
-        endpoint = isSignup ? "/auth/signup" : "/auth/login";
-        body = isSignup
-          ? { ...form, role }
-          : { email: form.email, password: form.password, role };
-      }
+      const body = isSignup
+        ? { ...form, role }
+        : { email: form.email, password: form.password, role };
 
       const res = await api.post(endpoint, body);
 
-      if (role === "admin") {
-        const loggedInAdmin = {
-          _id: res.data.admin.id,
-          name: res.data.admin.name,
-          email: res.data.admin.username,
-          role: "admin",
+      if (!isSignup) {
+        const loggedInUser = {
+          _id: res.data.user._id,
+          name: res.data.user.name,
+          email: res.data.user.email || res.data.user.username,
+          role: (res.data.user.role || role || "user").toLowerCase(),
         };
+
         const receivedToken = res.data.token;
 
-        if (onSuccess) onSuccess("admin", loggedInAdmin, receivedToken);
+        // Parent handles navigation / storage
+        if (onSuccess) onSuccess(role, loggedInUser, receivedToken);
       } else {
-        if (!isSignup) {
-          const loggedInUser = {
-            _id: res.data.user._id,
-            name: res.data.user.name,
-            email: res.data.user.email || res.data.user.username,
-            role: (res.data.user.role || role || "user").toLowerCase(),
-          };
-
-          const receivedToken = res.data.token;
-          if (onSuccess) onSuccess(role, loggedInUser, receivedToken);
-        } else {
-          alert("Signup successful! Please login.");
-          setIsSignup(false);
-        }
+        alert("Signup successful! Please login.");
+        setIsSignup(false);
       }
 
       onClose();
@@ -75,7 +55,6 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Only show Name field if signup AND not admin */}
           {isSignup && role !== "admin" && (
             <input
               type="text"
@@ -116,7 +95,7 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
           </button>
         </form>
 
-        {/* ✅ Hide signup toggle for admin */}
+        {/* ✅ Hide signup toggle if role is admin */}
         {role !== "admin" && (
           <p className="mt-3 text-sm text-center">
             {isSignup ? "Already have an account?" : "New user?"}{" "}
