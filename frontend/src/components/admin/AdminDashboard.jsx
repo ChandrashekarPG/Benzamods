@@ -7,14 +7,17 @@ import PortfolioAdmin from "./PortfolioAdmin";
 import UsersPage from "./UsersPage";
 import AdminsPage from "./AdminsPage";
 import OrdersPage from "./OrdersPage";
+import EnquiriesPage from "./EnquiriesPage"; // ✅ Import EnquiriesPage
 
 import { useAuth } from "../../context/AuthContext";
-import { FaBox, FaTools, FaEnvelope, FaImage, FaBars } from "react-icons/fa";
+import { FaBox, FaTools, FaEnvelope, FaImage, FaBars, FaQuestionCircle } from "react-icons/fa";
 
+// ✅ Add enquiries to tabs
 const tabs = [
   { id: "products", label: "Products", icon: <FaBox /> },
   { id: "services", label: "Services", icon: <FaTools /> },
   { id: "contacts", label: "Contacts", icon: <FaEnvelope /> },
+  { id: "enquiries", label: "Enquiries", icon: <FaQuestionCircle /> }, // ✅ New tab
   { id: "portfolio", label: "Portfolio", icon: <FaImage /> },
   { id: "users", label: "Users", icon: null },
   { id: "admins", label: "Admins", icon: null },
@@ -34,6 +37,8 @@ export default function AdminDashboard() {
         return <ServiceManager />;
       case "contacts":
         return <ContactManager />;
+      case "enquiries": // ✅ Render enquiries page
+        return <EnquiriesPage />;
       case "portfolio":
         return <PortfolioAdmin />;
       case "users":
