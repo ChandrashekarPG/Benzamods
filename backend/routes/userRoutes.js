@@ -3,8 +3,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/authMiddleware");
+const bcrypt = require("bcryptjs");
 
-// GET current logged-in user
+// ================== Get current logged-in user ==================
 router.get("/me", auth(["user"]), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-passwordHash");
@@ -16,7 +17,7 @@ router.get("/me", auth(["user"]), async (req, res) => {
   }
 });
 
-// GET all users (admin only)
+// ================== Get all users (admin only) ==================
 router.get("/", auth(["admin"]), async (req, res) => {
   try {
     const users = await User.find().select("-passwordHash");
@@ -27,7 +28,7 @@ router.get("/", auth(["admin"]), async (req, res) => {
   }
 });
 
-// DELETE user (admin only)
+// ================== Delete user (admin only) ==================
 router.delete("/:id", auth(["admin"]), async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -38,6 +39,34 @@ router.delete("/:id", auth(["admin"]), async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error while deleting user" });
+  }
+});
+
+// ================== Change password (user only) ==================
+router.put("/change-password", auth(["user"]), async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ msg: "Both fields are required" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Current password is incorrect" });
+    }
+
+    // Hash and update new password
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ msg: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error while changing password" });
   }
 });
 

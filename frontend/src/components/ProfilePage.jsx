@@ -9,13 +9,19 @@ import {
   FaBoxOpen,
   FaChevronDown,
   FaChevronUp,
+  FaLock,
 } from "react-icons/fa";
 
 export default function ProfilePage() {
   const { user, token } = useAuth();
   const [profile, setProfile] = useState(user || null);
   const [orders, setOrders] = useState([]);
-  const [expanded, setExpanded] = useState({}); // track expanded orders
+  const [expanded, setExpanded] = useState({});
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+  const [changing, setChanging] = useState(false);
 
   // Fetch profile if not already
   useEffect(() => {
@@ -59,8 +65,8 @@ export default function ProfilePage() {
 
     try {
       await api.delete(`/orders/my/${orderId}`, {
-  headers: { Authorization: `Bearer ${token}` },
-});
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setOrders((prev) => prev.filter((o) => o._id !== orderId));
     } catch (err) {
@@ -72,6 +78,26 @@ export default function ProfilePage() {
   // Toggle order details
   const toggleExpand = (orderId) => {
     setExpanded((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
+  };
+
+  // Handle password change
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    try {
+      setChanging(true);
+      await api.put(
+        "/users/change-password",
+        passwordForm,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Password updated successfully!");
+      setPasswordForm({ currentPassword: "", newPassword: "" });
+    } catch (err) {
+      console.error("Password change error:", err);
+      alert(err.response?.data?.msg || "Failed to change password");
+    } finally {
+      setChanging(false);
+    }
   };
 
   if (!profile) {
@@ -103,6 +129,45 @@ export default function ProfilePage() {
             <FaUserTag className="text-orange-400" />
             <p className="text-lg capitalize">{profile.role || "User"}</p>
           </div>
+        </div>
+
+        {/* Change Password */}
+        <div className="mt-10">
+          <h3 className="text-2xl font-semibold text-red-400 mb-6 flex items-center gap-2">
+            <FaLock /> Change Password
+          </h3>
+          <form
+            onSubmit={handlePasswordChange}
+            className="space-y-4 bg-gray-800 p-6 rounded-lg shadow"
+          >
+            <input
+              type="password"
+              placeholder="Current Password"
+              value={passwordForm.currentPassword}
+              onChange={(e) =>
+                setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
+              }
+              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+              required
+            />
+            <input
+              type="password"
+              placeholder="New Password"
+              value={passwordForm.newPassword}
+              onChange={(e) =>
+                setPasswordForm({ ...passwordForm, newPassword: e.target.value })
+              }
+              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+              required
+            />
+            <button
+              type="submit"
+              disabled={changing}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition disabled:opacity-50"
+            >
+              {changing ? "Updating..." : "Update Password"}
+            </button>
+          </form>
         </div>
 
         {/* Manage Orders */}
