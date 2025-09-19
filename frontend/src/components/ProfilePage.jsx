@@ -58,9 +58,10 @@ export default function ProfilePage() {
     if (!window.confirm("Are you sure you want to remove this order?")) return;
 
     try {
-      await api.delete(`/orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/orders/my/${orderId}`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+
       setOrders((prev) => prev.filter((o) => o._id !== orderId));
     } catch (err) {
       console.error("Error deleting order:", err);
