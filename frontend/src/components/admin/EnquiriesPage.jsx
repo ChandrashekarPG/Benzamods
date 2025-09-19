@@ -50,7 +50,6 @@ export default function EnquiriesPage() {
               <th className="p-2">Email</th>
               <th className="p-2">Phone</th>
               <th className="p-2">Message</th>
-              <th className="p-2">Product</th>
               <th className="p-2">User</th>
               <th className="p-2">Action</th>
             </tr>
@@ -62,7 +61,6 @@ export default function EnquiriesPage() {
                 <td className="p-2">{enq.email}</td>
                 <td className="p-2">{enq.phone}</td>
                 <td className="p-2">{enq.message}</td>
-                <td className="p-2">{enq.product?.name || "N/A"}</td>
                 <td className="p-2">{enq.user?.name || "Guest"}</td>
                 <td className="p-2">
                   <button
