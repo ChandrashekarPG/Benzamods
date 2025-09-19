@@ -64,13 +64,14 @@ export default function Navbar() {
 
           {/* ✅ Show My Profile button if logged in */}
           {user && (
-            <button
-              onClick={() => navigate("/profile")}
-              className="text-sm text-white underline hover:text-red-400"
-            >
-              My Profile
-            </button>
-          )}
+  <button
+    onClick={() => navigate("/profile")}
+    className="px-4 py-2 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform"
+  >
+    {user.name ? `Hi, ${user.name.split(" ")[0]}` : "My Profile"}
+  </button>
+)}
+
         </div>
 
         <HamburgerButton isOpen={isOpen} toggle={toggleMenu} />
