@@ -9,7 +9,7 @@ export default function AdminsPage() {
   const [newAdmin, setNewAdmin] = useState({ name: "", username: "", password: "" });
 
   const [changePw, setChangePw] = useState({ currentPassword: "", newPassword: "" });
-  const [showPwForm, setShowPwForm] = useState(false);
+  const [showPwFormFor, setShowPwFormFor] = useState(null); // track which admin row shows the form
 
   const token = localStorage.getItem("token");
   const currentAdminId = localStorage.getItem("adminId");
@@ -31,7 +31,7 @@ export default function AdminsPage() {
   }, [token]);
 
   const handleRemove = async (adminId) => {
-    if (adminId === currentAdminId) {
+    if (String(adminId) === String(currentAdminId)) {
       return alert("⚠️ You cannot remove yourself.");
     }
     if (!window.confirm("Are you sure you want to remove this admin?")) return;
@@ -72,7 +72,7 @@ export default function AdminsPage() {
       );
       alert("✅ Password updated successfully!");
       setChangePw({ currentPassword: "", newPassword: "" });
-      setShowPwForm(false);
+      setShowPwFormFor(null);
     } catch (err) {
       console.error("Error changing password:", err.response || err);
       alert(err.response?.data?.msg || "Failed to change password.");
@@ -165,9 +165,11 @@ export default function AdminsPage() {
                 >
                   Remove
                 </button>
-                {admin._id === currentAdminId && (
+                {String(admin._id) === String(currentAdminId) && (
                   <button
-                    onClick={() => setShowPwForm(!showPwForm)}
+                    onClick={() =>
+                      setShowPwFormFor(showPwFormFor === admin._id ? null : admin._id)
+                    }
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded transition-colors"
                   >
                     Change Password
@@ -179,8 +181,8 @@ export default function AdminsPage() {
         </tbody>
       </table>
 
-      {/* 🔑 Change Password Form */}
-      {showPwForm && (
+      {/* 🔑 Inline Change Password Form */}
+      {showPwFormFor && (
         <form
           onSubmit={handleChangePassword}
           className="mt-6 p-4 bg-gray-800 rounded-lg shadow-lg max-w-md"
@@ -191,7 +193,9 @@ export default function AdminsPage() {
             <input
               type="password"
               value={changePw.currentPassword}
-              onChange={(e) => setChangePw({ ...changePw, currentPassword: e.target.value })}
+              onChange={(e) =>
+                setChangePw({ ...changePw, currentPassword: e.target.value })
+              }
               className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white"
               required
             />
@@ -201,7 +205,9 @@ export default function AdminsPage() {
             <input
               type="password"
               value={changePw.newPassword}
-              onChange={(e) => setChangePw({ ...changePw, newPassword: e.target.value })}
+              onChange={(e) =>
+                setChangePw({ ...changePw, newPassword: e.target.value })
+              }
               className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white"
               required
             />
