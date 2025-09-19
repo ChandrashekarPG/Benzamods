@@ -60,6 +60,19 @@ router.get('/', auth(['admin']), async (req, res) => {
   }
 });
 
+// User: fetch own orders
+router.get("/my", auth(["user"]), async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id })
+      .populate("items.product");
+    res.json(orders);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // DELETE /api/orders/:id
 // Admin: delete order by ID
 router.delete("/:id", auth(['admin']), async (req, res) => {
