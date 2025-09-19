@@ -6,8 +6,10 @@ export default function AdminsPage() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-
   const [newAdmin, setNewAdmin] = useState({ name: "", username: "", password: "" });
+
+  const [changePw, setChangePw] = useState({ currentPassword: "", newPassword: "" });
+  const [showPwForm, setShowPwForm] = useState(false);
 
   const token = localStorage.getItem("token");
   const currentAdminId = localStorage.getItem("adminId");
@@ -32,14 +34,12 @@ export default function AdminsPage() {
     if (adminId === currentAdminId) {
       return alert("⚠️ You cannot remove yourself.");
     }
-
     if (!window.confirm("Are you sure you want to remove this admin?")) return;
 
     try {
       await api.delete(`/admins/${adminId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       setAdmins((prev) => prev.filter((admin) => admin._id !== adminId));
     } catch (err) {
       console.error("Error deleting admin:", err.response || err);
@@ -50,18 +50,32 @@ export default function AdminsPage() {
   const handleAddAdmin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post(
-        "/admins",
-        newAdmin,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      const res = await api.post("/admins", newAdmin, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAdmins((prev) => [...prev, res.data.admin]);
       setNewAdmin({ name: "", username: "", password: "" });
       alert("✅ Admin added successfully!");
     } catch (err) {
       console.error("Error adding admin:", err.response || err);
       alert(err.response?.data?.msg || "Failed to add admin.");
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put(
+        "/admins/change-password",
+        changePw,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("✅ Password updated successfully!");
+      setChangePw({ currentPassword: "", newPassword: "" });
+      setShowPwForm(false);
+    } catch (err) {
+      console.error("Error changing password:", err.response || err);
+      alert(err.response?.data?.msg || "Failed to change password.");
     }
   };
 
@@ -144,25 +158,62 @@ export default function AdminsPage() {
               <td className="px-6 py-3 border">{index + 1}</td>
               <td className="px-6 py-3 border">{admin.name}</td>
               <td className="px-6 py-3 border">{admin.username}</td>
-              <td className="px-6 py-3 border text-center">
+              <td className="px-6 py-3 border text-center space-x-2">
                 <button
                   onClick={() => handleRemove(admin._id)}
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded transition-colors"
                 >
                   Remove
                 </button>
+                {admin._id === currentAdminId && (
+                  <button
+                    onClick={() => setShowPwForm(!showPwForm)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded transition-colors"
+                  >
+                    Change Password
+                  </button>
+                )}
               </td>
             </tr>
           ))}
-          {filteredAdmins.length === 0 && (
-            <tr>
-              <td colSpan="4" className="text-center py-4 text-gray-400">
-                No admins match your search.
-              </td>
-            </tr>
-          )}
         </tbody>
       </table>
+
+      {/* 🔑 Change Password Form */}
+      {showPwForm && (
+        <form
+          onSubmit={handleChangePassword}
+          className="mt-6 p-4 bg-gray-800 rounded-lg shadow-lg max-w-md"
+        >
+          <h3 className="text-lg font-semibold mb-4 text-white">Change Password</h3>
+          <div className="mb-3">
+            <label className="block text-sm mb-1">Current Password</label>
+            <input
+              type="password"
+              value={changePw.currentPassword}
+              onChange={(e) => setChangePw({ ...changePw, currentPassword: e.target.value })}
+              className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white"
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="block text-sm mb-1">New Password</label>
+            <input
+              type="password"
+              value={changePw.newPassword}
+              onChange={(e) => setChangePw({ ...changePw, newPassword: e.target.value })}
+              className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 text-white"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+          >
+            Update Password
+          </button>
+        </form>
+      )}
     </div>
   );
 }

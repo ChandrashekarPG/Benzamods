@@ -63,4 +63,31 @@ router.delete("/:id", auth(["admin"]), async (req, res) => {
   }
 });
 
+// UPDATE password (self-service for admins)
+router.put("/change-password", auth(["admin"]), async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ msg: "Both current and new password are required" });
+    }
+
+    const admin = await Admin.findById(req.user._id);
+    if (!admin) return res.status(404).json({ msg: "Admin not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.passwordHash);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Current password is incorrect" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    admin.passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await admin.save();
+    res.json({ msg: "Password updated successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ msg: "Server error while updating password" });
+  }
+});
+
 module.exports = router;
