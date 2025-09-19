@@ -28,6 +28,7 @@ import PortfolioPage from "./components/PortfolioPage";
 import LoginModal from "./components/LoginModal";
 import MyCart from "./components/MyCart";
 import EnquiryForm from "./components/EnquiryForm";
+import ProfilePage from "./components/ProfilePage";
 
 
 
@@ -135,6 +136,9 @@ function App() {
 
             {/* Enquiry */}
             <Route path="/enquiry" element={<EnquiryForm />} />
+
+            {/* Profile */}
+            <Route path="/profile" element={<ProfilePage />} /> 
 
             {/* Login Modal (if direct route needed) */}
             <Route path="/login" element={<LoginModal />} />

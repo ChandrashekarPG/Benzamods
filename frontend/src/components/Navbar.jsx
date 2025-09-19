@@ -52,14 +52,26 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <NavbarLogo />
 
-        <NavbarDesktopMenu
-          user={user}
-          onUserLoginClick={() => setShowLogin("user")}
-          onAdminLoginClick={() => setShowLogin("admin")}
-          cartCount={cartCount}
-          goToCart={goToCart}
-          logoutUser={logoutUser}
-        />
+        <div className="flex items-center gap-4">
+          <NavbarDesktopMenu
+            user={user}
+            onUserLoginClick={() => setShowLogin("user")}
+            onAdminLoginClick={() => setShowLogin("admin")}
+            cartCount={cartCount}
+            goToCart={goToCart}
+            logoutUser={logoutUser}
+          />
+
+          {/* ✅ Show My Profile button if logged in */}
+          {user && (
+            <button
+              onClick={() => navigate("/profile")}
+              className="text-sm text-white underline hover:text-red-400"
+            >
+              My Profile
+            </button>
+          )}
+        </div>
 
         <HamburgerButton isOpen={isOpen} toggle={toggleMenu} />
       </div>
