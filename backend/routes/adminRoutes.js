@@ -1,6 +1,7 @@
 // routes/adminRoutes.js
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
 const auth = require("../middleware/authMiddleware");
 
@@ -15,10 +16,37 @@ router.get("/", auth(["admin"]), async (req, res) => {
   }
 });
 
+// CREATE new admin (only admins can add admins)
+router.post("/", auth(["admin"]), async (req, res) => {
+  try {
+    const { username, password, name } = req.body;
+
+    // check existing username
+    const existing = await Admin.findOne({ username });
+    if (existing) {
+      return res.status(400).json({ msg: "Username already taken" });
+    }
+
+    // hash password
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    const newAdmin = new Admin({ username, passwordHash, name });
+    await newAdmin.save();
+
+    res.status(201).json({
+      msg: "Admin created successfully",
+      admin: { _id: newAdmin._id, username: newAdmin.username, name: newAdmin.name },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error while creating admin" });
+  }
+});
+
 // DELETE admin (only admins can delete admins)
 router.delete("/:id", auth(["admin"]), async (req, res) => {
   try {
-    // prevent self-deletion
     if (req.user._id.toString() === req.params.id) {
       return res.status(400).json({ msg: "You cannot delete yourself" });
     }
