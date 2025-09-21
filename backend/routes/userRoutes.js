@@ -17,6 +17,38 @@ router.get("/me", auth(["user"]), async (req, res) => {
   }
 });
 
+// ================== Update profile (user only) ==================
+router.put("/update", auth(["user"]), async (req, res) => {
+  try {
+    const { name, contactNumber, address } = req.body;
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    if (name) user.name = name;
+    if (contactNumber !== undefined) user.contactNumber = contactNumber;
+    if (address !== undefined) user.address = address;
+
+    await user.save();
+
+    res.json({
+      msg: "Profile updated successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        contactNumber: user.contactNumber,
+        address: user.address,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ msg: "Server error while updating profile" });
+  }
+});
+
 // ================== Get all users (admin only) ==================
 router.get("/", auth(["admin"]), async (req, res) => {
   try {

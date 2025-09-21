@@ -12,6 +12,8 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
   role: { type: String, default: 'user' }, // 'user'
+  contactNumber: { type: String, default: "" }, // ✅ new field
+  address: { type: String, default: "" },       // ✅ new field
   cart: [CartItemSchema],
   createdAt: { type: Date, default: Date.now }
 });

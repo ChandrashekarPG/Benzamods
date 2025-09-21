@@ -10,6 +10,8 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaLock,
+  FaPhone,
+  FaHome,
 } from "react-icons/fa";
 
 export default function ProfilePage() {
@@ -23,6 +25,13 @@ export default function ProfilePage() {
   });
   const [changing, setChanging] = useState(false);
 
+  const [editMode, setEditMode] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    contactNumber: "",
+    address: "",
+  });
+
   // Fetch profile if not already
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,6 +41,11 @@ export default function ProfilePage() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);
+        setEditForm({
+          name: res.data.name || "",
+          contactNumber: res.data.contactNumber || "",
+          address: res.data.address || "",
+        });
       } catch (err) {
         console.error("Error fetching profile:", err);
       }
@@ -85,11 +99,9 @@ export default function ProfilePage() {
     e.preventDefault();
     try {
       setChanging(true);
-      await api.put(
-        "/users/change-password",
-        passwordForm,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.put("/users/change-password", passwordForm, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert("Password updated successfully!");
       setPasswordForm({ currentPassword: "", newPassword: "" });
     } catch (err) {
@@ -97,6 +109,22 @@ export default function ProfilePage() {
       alert(err.response?.data?.msg || "Failed to change password");
     } finally {
       setChanging(false);
+    }
+  };
+
+  // Handle profile update
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await api.put("/users/update", editForm, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(res.data.user);
+      setEditMode(false);
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Profile update error:", err);
+      alert(err.response?.data?.msg || "Failed to update profile");
     }
   };
 
@@ -129,6 +157,75 @@ export default function ProfilePage() {
             <FaUserTag className="text-orange-400" />
             <p className="text-lg capitalize">{profile.role || "User"}</p>
           </div>
+
+          {/* Contact Number */}
+          <div className="flex items-center gap-3 bg-gray-800 p-4 rounded-lg shadow">
+            <FaPhone className="text-green-400" />
+            <p className="text-lg">
+              {profile.contactNumber || "No contact number added"}
+            </p>
+          </div>
+
+          {/* Address */}
+          <div className="flex items-center gap-3 bg-gray-800 p-4 rounded-lg shadow">
+            <FaHome className="text-blue-400" />
+            <p className="text-lg">{profile.address || "No address added"}</p>
+          </div>
+        </div>
+
+        {/* Edit Profile */}
+        <div className="mt-6">
+          {!editMode ? (
+            <button
+              onClick={() => setEditMode(true)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Edit Profile
+            </button>
+          ) : (
+            <form
+              onSubmit={handleProfileUpdate}
+              className="space-y-4 bg-gray-800 p-6 rounded-lg shadow mt-4"
+            >
+              <input
+                type="text"
+                placeholder="Name"
+                value={editForm.name}
+                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white"
+              />
+              <input
+                type="text"
+                placeholder="Contact Number"
+                value={editForm.contactNumber}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, contactNumber: e.target.value })
+                }
+                className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white"
+              />
+              <textarea
+                placeholder="Address"
+                value={editForm.address}
+                onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white"
+              />
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditMode(false)}
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
         </div>
 
         {/* Change Password */}
@@ -147,7 +244,7 @@ export default function ProfilePage() {
               onChange={(e) =>
                 setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
               }
-              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white"
               required
             />
             <input
@@ -157,13 +254,13 @@ export default function ProfilePage() {
               onChange={(e) =>
                 setPasswordForm({ ...passwordForm, newPassword: e.target.value })
               }
-              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white"
               required
             />
             <button
               type="submit"
               disabled={changing}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition disabled:opacity-50"
+              className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition disabled:opacity-50"
             >
               {changing ? "Updating..." : "Update Password"}
             </button>
@@ -199,16 +296,12 @@ export default function ProfilePage() {
                     Total: ₹{order.total}
                   </p>
                   <p className="capitalize mb-4">
-                    Status:{" "}
-                    <span className="text-red-400">{order.status}</span>
+                    Status: <span className="text-red-400">{order.status}</span>
                   </p>
 
-                  {/* Expanded details */}
                   {expanded[order._id] && (
                     <div className="bg-gray-700 p-3 rounded-lg mb-4">
-                      <h5 className="text-md font-semibold mb-2">
-                        Order Details
-                      </h5>
+                      <h5 className="text-md font-semibold mb-2">Order Details</h5>
                       {order.items.map((item, i) => (
                         <div
                           key={i}
