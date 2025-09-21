@@ -93,59 +93,63 @@ export default function PopularServices() {
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {selectedIndex !== null && (
-          <motion.div
-            className="fixed inset-0 bg-black/80 flex justify-center items-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+<AnimatePresence>
+  {selectedIndex !== null && (
+    <motion.div
+      className="fixed inset-0 bg-black/80 flex justify-center items-center z-50 p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="relative bg-gray-900 rounded-xl p-6 max-w-3xl w-full shadow-2xl">
+        {/* Close button */}
+        <button
+          className="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl z-50"
+          onClick={(e) => {
+            e.stopPropagation(); // ✅ prevent bubbling
+            handleClose();
+          }}
+        >
+          <FaTimes />
+        </button>
+
+        {/* Image */}
+        <img
+          src={services[selectedIndex].image}
+          alt={services[selectedIndex].name}
+          className="w-full h-96 object-cover rounded-lg mb-4"
+        />
+
+        {/* Name + Description */}
+        <h2 className="text-3xl font-bold text-yellow-400 mb-3 text-center">
+          {services[selectedIndex].name}
+        </h2>
+        <p className="text-gray-300 text-lg leading-relaxed text-center">
+          {services[selectedIndex].description}
+        </p>
+
+        {/* Navigation arrows */}
+        <div className="absolute inset-y-0 left-3 flex items-center z-40">
+          <button
+            className="bg-gray-800/70 p-3 rounded-full text-white hover:bg-gray-700"
+            onClick={prevService}
           >
-            <div className="relative bg-gray-900 rounded-xl p-6 max-w-3xl w-full shadow-2xl">
-              {/* Close button */}
-              <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl"
-                onClick={handleClose}
-              >
-                <FaTimes />
-              </button>
+            <FaChevronLeft />
+          </button>
+        </div>
+        <div className="absolute inset-y-0 right-3 flex items-center z-40">
+          <button
+            className="bg-gray-800/70 p-3 rounded-full text-white hover:bg-gray-700"
+            onClick={nextService}
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
-              {/* Image */}
-              <img
-                src={services[selectedIndex].image}
-                alt={services[selectedIndex].name}
-                className="w-full h-96 object-cover rounded-lg mb-4"
-              />
-
-              {/* Name + Description */}
-              <h2 className="text-3xl font-bold text-yellow-400 mb-3 text-center">
-                {services[selectedIndex].name}
-              </h2>
-              <p className="text-gray-300 text-lg leading-relaxed text-center">
-                {services[selectedIndex].description}
-              </p>
-
-              {/* Navigation arrows */}
-              <div className="absolute inset-y-0 left-3 flex items-center">
-                <button
-                  className="bg-gray-800/70 p-3 rounded-full text-white hover:bg-gray-700"
-                  onClick={prevService}
-                >
-                  <FaChevronLeft />
-                </button>
-              </div>
-              <div className="absolute inset-y-0 right-3 flex items-center">
-                <button
-                  className="bg-gray-800/70 p-3 rounded-full text-white hover:bg-gray-700"
-                  onClick={nextService}
-                >
-                  <FaChevronRight />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
