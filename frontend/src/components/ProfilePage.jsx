@@ -33,28 +33,31 @@ export default function ProfilePage() {
   });
 
   // Fetch profile if not already
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        if (!token) return;
-        const res = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setProfile(res.data);
-        setEditForm({
-          name: res.data.name || "",
-          contactNumber: res.data.contactNumber || "",
-          address: res.data.address || "",
-        });
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-      }
-    };
-
-    if (!user && token) {
-      fetchProfile();
+  // Fetch profile if not already
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      if (!token) return;
+      const res = await api.get("/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(res.data);
+      setEditForm({
+        name: res.data.name || "",
+        contactNumber: res.data.contactNumber || "",
+        address: res.data.address || "",
+      });
+    } catch (err) {
+      console.error("Error fetching profile:", err);
     }
-  }, [user, token]);
+  };
+
+  // ✅ always fetch when token changes
+  if (token) {
+    fetchProfile();
+  }
+}, [token]);
+
 
   // Fetch user orders
   useEffect(() => {
