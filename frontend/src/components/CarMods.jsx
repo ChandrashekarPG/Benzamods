@@ -82,9 +82,7 @@ const CarMods = () => {
 </h2>
 
 
-      {/* Filters */}
-           
-            {/* Filters */}
+      {/* Filters */}         
       <div className="mb-10 max-w-2xl mx-auto p-5 rounded-xl bg-gradient-to-r from-gray-800/80 via-gray-900/80 to-gray-800/80 
                       backdrop-blur-md shadow-xl border border-gray-700">
         <h3 className="text-lg font-semibold text-yellow-400 mb-4 text-center">

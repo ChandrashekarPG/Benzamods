@@ -75,38 +75,44 @@ const BikeMods = () => {
         🏍️ Bike Modification Products
       </h2>
 
-      {/* Filters */}
-      <div className="mb-10 p-5 border border-gray-700 rounded-xl bg-gray-800/60 backdrop-blur-md flex flex-wrap gap-4 items-end shadow-lg">
-        <input
-          name="category"
-          placeholder="Filter by Category"
-          value={filters.category}
-          onChange={handleFilterChange}
-          className="border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded w-60 focus:ring-2 focus:ring-orange-500 outline-none"
-        />
-        <input
-          name="minPrice"
-          type="number"
-          placeholder="Min Price"
-          value={filters.minPrice}
-          onChange={handleFilterChange}
-          className="border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded w-40 focus:ring-2 focus:ring-orange-500 outline-none"
-        />
-        <input
-          name="maxPrice"
-          type="number"
-          placeholder="Max Price"
-          value={filters.maxPrice}
-          onChange={handleFilterChange}
-          className="border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded w-40 focus:ring-2 focus:ring-orange-500 outline-none"
-        />
-        <button
-          onClick={applyFilter}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg transition-all duration-200"
-        >
-          Apply Filter
-        </button>
+            {/* Filters */}
+      <div className="mb-10 max-w-2xl mx-auto p-5 rounded-xl bg-gradient-to-r from-gray-800/80 via-gray-900/80 to-gray-800/80 
+                      backdrop-blur-md shadow-xl border border-gray-700">
+        <h3 className="text-lg font-semibold text-yellow-400 mb-4 text-center">
+          🔍 Filter by Price
+        </h3>
+        <div className="flex flex-wrap gap-3 justify-center">
+          <input
+            name="minPrice"
+            type="number"
+            placeholder="💰 Min Price"
+            value={filters.minPrice}
+            onChange={handleFilterChange}
+            className="w-36 border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded-lg 
+                       focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none 
+                       placeholder-gray-500 shadow-inner"
+          />
+          <input
+            name="maxPrice"
+            type="number"
+            placeholder="💰 Max Price"
+            value={filters.maxPrice}
+            onChange={handleFilterChange}
+            className="w-36 border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded-lg 
+                       focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none 
+                       placeholder-gray-500 shadow-inner"
+          />
+          <button
+            onClick={applyFilter}
+            className="px-5 py-2 rounded-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 
+                       hover:from-green-600 hover:to-green-700 text-white shadow-md 
+                       hover:shadow-green-500/40 transition-all duration-300 ease-in-out"
+          >
+            Apply
+          </button>
+        </div>
       </div>
+
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
