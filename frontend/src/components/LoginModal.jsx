@@ -1,3 +1,4 @@
+// src/components/LoginModal.jsx
 import React, { useState } from "react";
 import api from "./api";
 
@@ -30,8 +31,6 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
         };
 
         const receivedToken = res.data.token;
-
-        // Parent handles navigation / storage
         if (onSuccess) onSuccess(role, loggedInUser, receivedToken);
       } else {
         alert("Signup successful! Please login.");
@@ -45,24 +44,34 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
     }
   };
 
+  // 🎨 Theme based on role
+  const isAdmin = role === "admin";
+  const accent = isAdmin ? "red" : "yellow";
+  const titleIcon = isAdmin ? "🔑" : "👤";
+  const titleText = isSignup && !isAdmin
+    ? `Signup as ${role}`
+    : `Login as ${role}`;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">
-          {isSignup && role !== "admin"
-            ? `Signup as ${role}`
-            : `Login as ${role}`}
+    <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+      <div className="bg-gray-900 p-8 rounded-2xl shadow-2xl w-96 border border-gray-700">
+        <h2
+          className={`text-2xl font-bold mb-6 text-center ${
+            isAdmin ? "text-red-400" : "text-yellow-400"
+          }`}
+        >
+          {titleIcon} {titleText}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {isSignup && role !== "admin" && (
+          {isSignup && !isAdmin && (
             <input
               type="text"
               name="name"
               placeholder="Name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 outline-none"
               required
             />
           )}
@@ -70,10 +79,12 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
           <input
             type="email"
             name="email"
-            placeholder={role === "admin" ? "Username" : "Email"}
+            placeholder={isAdmin ? "Username" : "Email"}
             value={form.email}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
+            className={`w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 ${
+              isAdmin ? "focus:ring-red-400" : "focus:ring-yellow-400"
+            } outline-none`}
             required
           />
 
@@ -83,25 +94,31 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
+            className={`w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 ${
+              isAdmin ? "focus:ring-red-400" : "focus:ring-yellow-400"
+            } outline-none`}
             required
           />
 
           <button
             type="submit"
-            className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
+            className={`w-full ${
+              isAdmin
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-yellow-500 hover:bg-yellow-600 text-black"
+            } font-semibold py-2 rounded-lg shadow-md transition`}
           >
-            {isSignup && role !== "admin" ? "Signup" : "Login"}
+            {isSignup && !isAdmin ? "Signup" : "Login"}
           </button>
         </form>
 
-        {/* ✅ Hide signup toggle if role is admin */}
-        {role !== "admin" && (
-          <p className="mt-3 text-sm text-center">
+        {/* ✅ Hide signup for admins */}
+        {!isAdmin && (
+          <p className="mt-4 text-sm text-center text-gray-400">
             {isSignup ? "Already have an account?" : "New user?"}{" "}
             <button
               onClick={() => setIsSignup(!isSignup)}
-              className="text-red-500 underline"
+              className="text-yellow-400 hover:underline"
             >
               {isSignup ? "Login" : "Signup"}
             </button>
@@ -110,7 +127,7 @@ export default function LoginModal({ isOpen, onClose, role, onSuccess }) {
 
         <button
           onClick={onClose}
-          className="mt-4 w-full border py-2 rounded hover:bg-gray-100"
+          className="mt-6 w-full bg-gray-700 hover:bg-gray-600 text-gray-200 py-2 rounded-lg transition"
         >
           Close
         </button>
