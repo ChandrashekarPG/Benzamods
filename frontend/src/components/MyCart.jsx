@@ -1,3 +1,4 @@
+// src/components/MyCart.jsx
 import React, { useEffect, useState } from "react";
 import api from "./api";
 import { useAuth } from "../context/AuthContext";
@@ -8,7 +9,24 @@ export default function MyCart() {
   const [cartItems, setCartItems] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [toast, setToast] = useState(""); // For order confirmation
-  const [customer, setCustomer] = useState({ name: "", email: "" });
+  const [customer, setCustomer] = useState({
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+  });
+
+  // ✅ Auto-fill user details if available
+  useEffect(() => {
+    if (user) {
+      setCustomer({
+        name: user.name || "",
+        email: user.email || "",
+        contactNumber: user.contactNumber || "",
+        address: user.address || "",
+      });
+    }
+  }, [user]);
 
   // Fetch user's cart
   const fetchCart = async () => {
@@ -65,7 +83,6 @@ export default function MyCart() {
       );
 
       setShowForm(false);
-      setCustomer({ name: "", email: "" });
       fetchCart();
 
       // Show toast
@@ -93,12 +110,11 @@ export default function MyCart() {
     setTimeout(() => setToast(""), 4000); // Hide after 4 seconds
   };
 
-return (
-  <div className="min-h-screen bg-gray-900 text-white p-6 pt-28 relative">
-    <h1 className="text-3xl font-bold mb-6 text-yellow-400 text-center drop-shadow-lg">
-      🛒 My Cart
-    </h1>
-
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6 pt-28 relative">
+      <h1 className="text-3xl font-bold mb-6 text-yellow-400 text-center drop-shadow-lg">
+        🛒 My Cart
+      </h1>
 
       {cartItems.length === 0 ? (
         <p className="text-gray-400 mt-6 text-center text-lg">Your cart is empty.</p>
@@ -182,6 +198,23 @@ return (
               placeholder="Email"
               value={customer.email}
               onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
+              className="w-full mb-3 p-2 rounded bg-gray-700 text-white"
+            />
+            <input
+              type="text"
+              placeholder="Contact Number"
+              value={customer.contactNumber}
+              onChange={(e) =>
+                setCustomer({ ...customer, contactNumber: e.target.value })
+              }
+              className="w-full mb-3 p-2 rounded bg-gray-700 text-white"
+            />
+            <textarea
+              placeholder="Address"
+              value={customer.address}
+              onChange={(e) =>
+                setCustomer({ ...customer, address: e.target.value })
+              }
               className="w-full mb-3 p-2 rounded bg-gray-700 text-white"
             />
             <div className="flex justify-end gap-3">
