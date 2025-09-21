@@ -84,18 +84,20 @@ const CarMods = () => {
 
       {/* Filters */}
            
-      <div className="mb-10 p-6 rounded-2xl bg-gradient-to-r from-gray-800/80 via-gray-900/80 to-gray-800/80 backdrop-blur-md shadow-2xl border border-gray-700">
-        <h3 className="text-lg font-semibold text-yellow-400 mb-4">
-          🔍 Filter Products
+            {/* Filters */}
+      <div className="mb-10 max-w-2xl mx-auto p-5 rounded-xl bg-gradient-to-r from-gray-800/80 via-gray-900/80 to-gray-800/80 
+                      backdrop-blur-md shadow-xl border border-gray-700">
+        <h3 className="text-lg font-semibold text-yellow-400 mb-4 text-center">
+          🔍 Filter by Price
         </h3>
-        <div className="flex flex-wrap gap-4 items-end">
+        <div className="flex flex-wrap gap-3 justify-center">
           <input
             name="minPrice"
             type="number"
             placeholder="💰 Min Price"
             value={filters.minPrice}
             onChange={handleFilterChange}
-            className="flex-1 min-w-[150px] border border-gray-600 bg-gray-900 text-gray-200 p-3 rounded-lg 
+            className="w-36 border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded-lg 
                        focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none 
                        placeholder-gray-500 shadow-inner"
           />
@@ -105,20 +107,21 @@ const CarMods = () => {
             placeholder="💰 Max Price"
             value={filters.maxPrice}
             onChange={handleFilterChange}
-            className="flex-1 min-w-[150px] border border-gray-600 bg-gray-900 text-gray-200 p-3 rounded-lg 
+            className="w-36 border border-gray-600 bg-gray-900 text-gray-200 p-2 rounded-lg 
                        focus:ring-2 focus:ring-green-400 focus:border-green-400 outline-none 
                        placeholder-gray-500 shadow-inner"
           />
           <button
             onClick={applyFilter}
-            className="px-6 py-3 rounded-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 
-                       hover:from-green-600 hover:to-green-700 text-white shadow-lg 
+            className="px-5 py-2 rounded-lg font-semibold bg-gradient-to-r from-green-500 to-green-600 
+                       hover:from-green-600 hover:to-green-700 text-white shadow-md 
                        hover:shadow-green-500/40 transition-all duration-300 ease-in-out"
           >
-            Apply Filter
+            Apply
           </button>
         </div>
       </div>
+
 
 
       {/* Products Grid */}
